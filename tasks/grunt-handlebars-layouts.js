@@ -79,7 +79,7 @@ module.exports = function(grunt) {
           mod = require(module);
           if (typeof mod.register === 'function') {
             mod.register(handlebars, opts);
-          } else { 
+          } else {
             helpers = mod();
             for (var helper in helpers) {
               if (helpers.hasOwnProperty(helper)) {
@@ -159,7 +159,7 @@ module.exports = function(grunt) {
       filePair.src.forEach(function(srcFile) {
         var context = opts.context;
         var template, html;
-        
+
         var getBlocks = function (context, name) {
             var blocks = context._blocks;
             return blocks[name] || (blocks[name] = []);
@@ -262,6 +262,12 @@ module.exports = function(grunt) {
             }
             _.extend(context, obj);
           });
+
+        //if context is a funtion, call it
+        } else {
+          var getType = {};
+          var isFunction = opts.context && getType.toString.call(opts.context) === '[object Function]';
+          context = opts.context(filePair.dest, srcFile);
         }
 
         // render template and save as html
